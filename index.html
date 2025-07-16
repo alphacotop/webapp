@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-EDU-KIT for MCU</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        .service-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+        .service-card.disabled {
+            background-color: #e5e7eb; /* bg-gray-200 */
+            cursor: not-allowed;
+        }
+        .service-card.disabled:hover {
+            transform: none;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <div class="container mx-auto p-4 md:p-8">
+        <!-- 헤더 -->
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-6xl font-black text-gray-800">AI-EDU-KIT for MCU</h1>
+            <p class="text-lg text-gray-500 mt-4">웹캠과 인공지능을 활용해 하드웨어를 제어하는 다양한 서비스를 경험해보세요.</p>
+        </header>
+
+        <!-- 서비스 카드 그리드 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            
+            <!-- 1. Teachable Machine 올인원 -->
+            <a href="TM_AllinOne4MCU_V10.html" class="service-card block bg-white rounded-2xl shadow-lg overflow-hidden">
+                <div class="p-8">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-100 text-green-800 p-3 rounded-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800 ml-4">TM 올인원 서비스</h2>
+                    </div>
+                    <p class="text-gray-600">Teachable Machine으로 학습한 이미지, 포즈, 음성 모델을 사용하여 MCU를 제어합니다.</p>
+                </div>
+                <div class="bg-green-500 text-white text-center font-bold py-2">
+                    서비스 바로가기
+                </div>
+            </a>
+
+            <!-- 2. 얼굴 인식 올인원 -->
+            <a href="FACE_AllinOne4MCU_V10.html" class="service-card block bg-white rounded-2xl shadow-lg overflow-hidden">
+                <div class="p-8">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-blue-100 text-blue-800 p-3 rounded-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800 ml-4">얼굴 인식 올인원</h2>
+                    </div>
+                    <p class="text-gray-600">MediaPipe 미간 좌표, 하품, 눈 깜박임, 얼굴 개수, 크기 등을 사용하여 MCU를 제어합니다.</p>
+                </div>
+                <div class="bg-blue-500 text-white text-center font-bold py-2">
+                    서비스 바로가기
+                </div>
+            </a>
+
+            <!-- 3. 개발중인 서비스 -->
+            <div class="service-card disabled bg-white rounded-2xl shadow-lg overflow-hidden">
+                <div class="p-8">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-yellow-100 text-yellow-800 p-3 rounded-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" /></svg>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800 ml-4">서비스 3</h2>
+                    </div>
+                    <p class="text-gray-600">새로운 인공지능 서비스가 준비중입니다. 기대해주세요!</p>
+                </div>
+                <div class="bg-gray-400 text-white text-center font-bold py-2">
+                    개발중
+                </div>
+            </div>
+
+            <!-- 4. 개발중인 서비스 -->
+            <div class="service-card disabled bg-white rounded-2xl shadow-lg overflow-hidden">
+                <div class="p-8">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-purple-100 text-purple-800 p-3 rounded-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800 ml-4">서비스 4</h2>
+                    </div>
+                    <p class="text-gray-600">다양한 아이디어를 바탕으로 한 멋진 기능을 준비하고 있습니다.</p>
+                </div>
+                <div class="bg-gray-400 text-white text-center font-bold py-2">
+                    개발중
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 푸터 -->
+        <footer class="text-center mt-12 text-gray-500">
+            <p>&copy; 2025 AI-EDU-KIT. All Rights Reserved.</p>
+            <p class="text-sm mt-2">Developed by Seok-jeon Kim</p>
+        </footer>
+    </div>
+
+</body>
+</html>
