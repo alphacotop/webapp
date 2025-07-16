@@ -106,6 +106,34 @@
             <button class="btn btn-danger" onclick="ConnectionManager.disconnectBLE()">해제</button>
             <span id="connectionStatus" class="status disconnected">연결 안됨</span>
         </div>
+                <!-- ==================== 사용 방법 섹션 ==================== -->
+        <div class="card mt-6 p-4 bg-blue-50 rounded-lg">
+            <h3 class="text-lg font-bold mb-3">💡 사용 방법</h3>
+            <ol class="list-decimal list-inside space-y-2 text-sm text-gray-700">
+                <li>상단 탭에서 원하는 얼굴 인식 기능을 선택하세요.</li>
+                <li>'인식 시작' 버튼을 클릭하여 카메라를 활성화하세요.</li>
+                <li>MCU 장치를 시리얼 또는 블루투스로 연결하세요.</li>
+                <li>얼굴이 인식되면 실시간으로 데이터가 MCU로 전송됩니다.</li>
+                <li>MCU에서 수신한 데이터를 활용하여 다양한 출력장치를 제어하세요.</li>
+            </ol>
+        </div>
+
+        <!-- ==================== 개발자 정보 섹션 ==================== -->
+        <div class="card mt-6 p-4 bg-gray-100 rounded-lg">
+            <h3 class="text-lg font-bold mb-3">👨‍💻 개발자 정보</h3>
+            <div class="text-sm text-gray-600 space-y-2">
+                <p><strong>김석전</strong>, 송도중학교 정보교사 / 인하대학교 겸임교수</p>
+                <p>📅 Since 2023.04.24 | 📧 alphaco@kakao.com</p>
+                <div class="mt-3 p-3 bg-white rounded border border-gray-200">
+                    <p class="mb-2">WebSerial과 WebBLE를 이용해 페이스매시 결과를 유/무선으로 MCU에 전송하는 로컬 웹앱입니다.</p>
+                    <p class="mb-2">✅ 아두이노, 마이크로비트, ESP32, 라즈베리파이 피코 등 모든 MCU를 사용할 수 있습니다.</p>
+                    <p class="mb-2">🌐 Chrome, Edge 브라우저에서 테스트 되었습니다.</p>
+                    <p class="mb-2">⚙️ 하드웨어는 블록코딩이나 텍스트 코딩을 이용해 사전에 코드 업로드가 필요합니다.</p>
+                    <p class="mb-2">🚀 인공지능에 다양한 출력장치를 연결하여 AIoT 애플리케이션을 제작해 보세요.</p>
+                    <p class="mt-3 font-medium">📜 CCL: BY-NC-ND</p>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
