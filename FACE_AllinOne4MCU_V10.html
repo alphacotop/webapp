@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>얼굴 인식 올인원 웹앱 (MediaPipe)</title>
     
-    <!-- MediaPipe 라이브러리 -->
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
@@ -46,7 +45,6 @@
 <body class="p-4">
 
     <div class="max-w-4xl w-full mx-auto p-4 md:p-6 bg-white rounded-2xl shadow-lg">
-        <!-- [수정] 헤더에 홈 버튼 추가 -->
         <header class="relative text-center mb-6 p-5 rounded-2xl shadow-md bg-white">
              <a href="index.html" title="메인으로 돌아가기" class="absolute left-4 md:left-6 top-1/2 -translate-y-1/2 p-2 rounded-full hover:bg-gray-100 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -80,7 +78,6 @@
 
             <div class="w-full max-w-lg mt-6">
                 <div class="mt-4">
-                    <!-- 각 탭의 콘텐츠 -->
                     <div id="face-coords-tab" class="tab-content active"><div class="bg-gray-50 p-4 rounded-lg text-center"><h3 class="font-semibold text-gray-600 mb-2">미간 중심 좌표</h3><div id="coords-display" class="text-2xl font-bold text-blue-600 opacity-50">X: <span id="x-coord">0</span>, Y: <span id="y-coord">0</span></div></div></div>
                     <div id="yawn-detection-tab" class="tab-content"><div class="bg-gray-50 p-4 rounded-lg text-center"><h3 class="font-semibold text-gray-600 mb-2">입 벌림 크기</h3><div id="mouth-open-display" class="text-2xl font-bold text-green-600 opacity-50"><span id="mouth-open-value">0</span></div></div></div>
                     <div id="blink-detection-tab" class="tab-content"><div class="bg-gray-50 p-4 rounded-lg text-center"><h3 class="font-semibold text-gray-600 mb-2">눈 깜박임 상태 (1: 깜박임, 0: 평상시)</h3><div id="blink-display" class="grid grid-cols-3 gap-4 text-2xl font-bold opacity-50"><div class="text-purple-600">왼쪽: <span id="left-blink-status">0</span></div><div class="text-purple-600">오른쪽: <span id="right-blink-status">0</span></div><div class="text-purple-600">양쪽: <span id="both-blink-status">0</span></div></div></div></div>
@@ -106,8 +103,7 @@
             <button class="btn btn-danger" onclick="ConnectionManager.disconnectBLE()">해제</button>
             <span id="connectionStatus" class="status disconnected">연결 안됨</span>
         </div>
-                <!-- ==================== 사용 방법 섹션 ==================== -->
-        <div class="card mt-6 p-4 bg-blue-50 rounded-lg">
+                <div class="card mt-6 p-4 bg-blue-50 rounded-lg">
             <h3 class="text-lg font-bold mb-3">💡 사용 방법</h3>
             <ol class="list-decimal list-inside space-y-2 text-sm text-gray-700">
                 <li>상단 탭에서 원하는 얼굴 인식 기능을 선택하세요.</li>
@@ -118,7 +114,6 @@
             </ol>
         </div>
 
-        <!-- ==================== 개발자 정보 섹션 ==================== -->
         <div class="card mt-6 p-4 bg-gray-100 rounded-lg">
             <h3 class="text-lg font-bold mb-3">👨‍💻 개발자 정보</h3>
             <div class="text-sm text-gray-600 space-y-2">
@@ -145,8 +140,8 @@
             SERIAL_BAUD_RATE: 115200,
             BLE_SERVICE_UUID: '6e400001-b5a3-f393-e0a9-e50e24dcca9e',
             BLE_CHARACTERISTIC_UUID: '6e400003-b5a3-f393-e0a9-e50e24dcca9e',
-            SEND_REPEAT_COUNT: 5,
-            SEND_DELAY_MS: 30
+            // [수정] 전송 주기 설정 (100ms = 1초에 10번)
+            SEND_INTERVAL_MS: 100
         };
 
         const LANDMARKS = {
@@ -297,24 +292,34 @@
 
         const ConnectionManager = {
             port: null, bleDevice: null, bleCharacteristic: null, lastSentData: {},
-            sleep: (ms) => new Promise(resolve => setTimeout(resolve, ms)),
-            async sendToMCU(data, type) {
-                if (data === this.lastSentData[type]) return;
-                this.lastSentData[type] = data;
+            // [수정] sendToMCU 로직 단순화: 반복 전송 제거
+            async sendToMCU(data) {
+                if (data === this.lastSentData) return; // 이전과 동일한 데이터면 보내지 않음
+                this.lastSentData = data;
+                
                 const dataToSend = data + '\n';
-                for (let i=0; i<CONFIG.SEND_REPEAT_COUNT; i++) {
-                    if (this.port?.writable) try { await this.port.writable.getWriter().write(new TextEncoder().encode(dataToSend)); } catch(e){console.error(e);break;}
-                    if (this.bleCharacteristic) try { await this.bleCharacteristic.writeValue(new TextEncoder().encode(dataToSend)); } catch(e){console.error(e);break;}
-                    await this.sleep(CONFIG.SEND_DELAY_MS);
+                
+                try {
+                    if (this.port?.writable) {
+                        const writer = this.port.writable.getWriter();
+                        await writer.write(new TextEncoder().encode(dataToSend));
+                        writer.releaseLock();
+                    }
+                    if (this.bleCharacteristic) {
+                        await this.bleCharacteristic.writeValueWithoutResponse(new TextEncoder().encode(dataToSend));
+                    }
+                } catch(e) {
+                    console.error("전송 실패:", e);
                 }
             },
             async connectSerial() { try {this.port = await navigator.serial.requestPort(); await this.port.open({baudRate:CONFIG.SERIAL_BAUD_RATE}); UIManager.updateConnectionStatus(true,'시리얼');}catch(e){alert('시리얼 연결 실패: '+e.message);} },
-            async disconnectSerial() { if(this.port){await this.port.close(); this.port=null; UIManager.updateConnectionStatus(false);} },
+            async disconnectSerial() { if(this.port){try{await this.port.close();} catch(e){} this.port=null; UIManager.updateConnectionStatus(false);} },
             async connectBLE() {
                 const devType = document.getElementById('ble-device-type').value;
                 const opts = devType === 'microbit' ? {filters:[{namePrefix:"BBC micro:bit"}], optionalServices:[CONFIG.BLE_SERVICE_UUID]} : {filters:[{services:[CONFIG.BLE_SERVICE_UUID]}]};
                 try {
                     this.bleDevice = await navigator.bluetooth.requestDevice(opts);
+                    this.bleDevice.addEventListener('gattserverdisconnected', () => UIManager.updateConnectionStatus(false));
                     const server = await this.bleDevice.gatt.connect();
                     const service = await server.getPrimaryService(CONFIG.BLE_SERVICE_UUID);
                     this.bleCharacteristic = await service.getCharacteristic(CONFIG.BLE_CHARACTERISTIC_UUID);
@@ -324,30 +329,57 @@
             disconnectBLE() { if(this.bleDevice?.gatt.connected){this.bleDevice.gatt.disconnect();this.bleDevice=null;this.bleCharacteristic=null;UIManager.updateConnectionStatus(false);} }
         };
 
-        const AppState = { isRunning: false, activeTabId: 'face-coords', leftEyeBlinkCounter: 0, rightEyeBlinkCounter: 0, faceMesh: null, camera: null };
+        // [수정] AppState에 마지막 전송 시간 추가
+        const AppState = { isRunning: false, activeTabId: 'face-coords', leftEyeBlinkCounter: 0, rightEyeBlinkCounter: 0, faceMesh: null, camera: null, lastSendTime: 0 };
 
         const FaceRecognitionApp = {
+            // [수정] onResults 로직 전체 변경: 데이터 포맷 통일 및 전송 주기 제어
             onResults(results) {
                 const { canvasCtx, canvas } = UIManager.elements;
                 Renderer.clearAndDrawVideo(canvasCtx, results.image, canvas.width, canvas.height);
-                if (results.multiFaceLandmarks?.length > 0) {
+                
+                let dataString = null;
+
+                if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
                     if (AppState.activeTabId === 'face-count') {
-                        const data = FaceAnalyzer.processFaceCount(results.multiFaceLandmarks, canvasCtx, canvas.width, canvas.height);
-                        if (data) ConnectionManager.sendToMCU(data, 'faceCount');
+                        const faceCount = FaceAnalyzer.processFaceCount(results.multiFaceLandmarks, canvasCtx, canvas.width, canvas.height);
+                        dataString = `${faceCount},0,0,0`;
                     } else {
                         const landmarks = results.multiFaceLandmarks[0];
                         const box = FaceAnalyzer.getBoundingBox(landmarks, canvas.width, canvas.height);
                         Renderer.drawBoundingBox(canvasCtx, box);
-                        let data = null, dataType = '';
+                        let data;
+
                         switch (AppState.activeTabId) {
-                            case 'face-coords': data=FaceAnalyzer.processGlabella(landmarks, canvasCtx, canvas.width, canvas.height); dataType='coords'; break;
-                            case 'yawn-detection': data=FaceAnalyzer.processMouthOpen(landmarks, canvasCtx, canvas.width, canvas.height); dataType='mouth'; break;
-                            case 'blink-detection': data=FaceAnalyzer.processBlinks(landmarks); dataType='blinks'; break;
-                            case 'face-size': data=FaceAnalyzer.processFaceSize(box); dataType='faceSize'; break;
+                            case 'face-coords':
+                                data = FaceAnalyzer.processGlabella(landmarks, canvasCtx, canvas.width, canvas.height);
+                                if (data) dataString = `${data},0,0`;
+                                break;
+                            case 'yawn-detection':
+                                data = FaceAnalyzer.processMouthOpen(landmarks, canvasCtx, canvas.width, canvas.height);
+                                if (data) dataString = `${data},0,0,0`;
+                                break;
+                            case 'blink-detection':
+                                data = FaceAnalyzer.processBlinks(landmarks);
+                                if (data) dataString = `${data},0`;
+                                break;
+                            case 'face-size':
+                                data = FaceAnalyzer.processFaceSize(box);
+                                if (data) dataString = `${data},0,0`;
+                                break;
                         }
-                        if (data) ConnectionManager.sendToMCU(data, dataType);
                     }
-                } else { UIManager.resetAll(); }
+                } else {
+                    UIManager.resetAll();
+                }
+
+                if (dataString) {
+                    const now = Date.now();
+                    if (now - AppState.lastSendTime > CONFIG.SEND_INTERVAL_MS) {
+                        AppState.lastSendTime = now;
+                        ConnectionManager.sendToMCU(dataString);
+                    }
+                }
                 canvasCtx.restore();
             },
             switchTab(tabId) {
