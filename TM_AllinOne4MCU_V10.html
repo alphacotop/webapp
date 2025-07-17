@@ -426,7 +426,7 @@
         async function connectSerial() {
             try {
                 port = await navigator.serial.requestPort();
-                await port.open({ baudRate: 115200 });
+                await port.open({ baudRate: 9600 });
                 updateConnectionStatus(true, '시리얼');
             } catch (error) { alert('시리얼 연결 실패: ' + error.message); }
         }
