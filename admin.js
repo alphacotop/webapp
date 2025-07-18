@@ -139,12 +139,8 @@
         },
         
         generateAdminKey: function() {
-            const today = new Date();
-            const year = today.getFullYear();
-            const month = (today.getMonth() + 1).toString().padStart(2, "0");
-            const day = today.getDate().toString().padStart(2, "0");
-            const dateStr = year + month + day;
-            return btoa("admin" + dateStr).substring(0, 8);
+            // 고정된 관리자 코드
+            return "admin7673";
         },
         
         verifyAdmin: function(inputKey) {
@@ -339,8 +335,8 @@
         
         setTimeout(function() {
             console.clear();
-            console.log("%c🔑 오늘의 관리자 코드", "color: blue; font-size: 14px; font-weight: bold; background: lightblue; padding: 2px 8px;");
-            console.log("%c" + AdminModule.getAdminCode(), "color: blue; font-size: 16px; font-weight: bold; background: yellow; padding: 4px 8px;");
+            console.log("%c🔑 관리자 코드 (고정)", "color: blue; font-size: 14px; font-weight: bold; background: lightblue; padding: 2px 8px;");
+            console.log("%cadmin7673", "color: blue; font-size: 16px; font-weight: bold; background: yellow; padding: 4px 8px;");
             console.log("%cCtrl+Shift+A 키로 관리자 패널을 활성화하세요.", "color: gray; font-size: 12px;");
             
             const stats = AdminModule.getStats();
