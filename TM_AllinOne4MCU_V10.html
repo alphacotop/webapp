@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TM All-in-One for MCU</title>
+    <title data-translate-key="tm_page_title">TM All-in-One for MCU</title>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/pose@0.8.6/dist/teachablemachine-pose.min.js"></script>
@@ -11,16 +11,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary: #4CAF50;
-            --primary-dark: #388E3C;
-            --secondary: #2196F3;
-            --danger: #f44336;
-            --bg: #f5f5f5;
-            --card: white;
-            --text: #333;
-            --border: #ddd;
-        }
+        /* CSS는 변경 없음 */
+        :root { --primary: #4CAF50; --primary-dark: #388E3C; --secondary: #2196F3; --danger: #f44336; --bg: #f5f5f5; --card: white; --text: #333; --border: #ddd; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
         .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
@@ -66,6 +58,7 @@
     </style>
 </head>
 <body class="p-4">
+    <script src="translations.js"></script>
     <div class="max-w-4xl w-full mx-auto p-4 md:p-6 bg-white rounded-2xl shadow-lg">
         
         <div class="header relative text-center mb-6 p-5 rounded-2xl shadow-md">
@@ -74,30 +67,30 @@
                   <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                 </svg>
             </a>
-            <h1 class="text-3xl md:text-4xl font-bold text-gray-800">🤖 TM All-in-One for MCU</h1>
-            <p class="text-gray-500 mt-2"><a href="https://teachablemachine.withgoogle.com/" target="_blank" class="text-blue-600 underline"><b>Teachable Machine</b></a> 통합 인터페이스 - 이미지, 포즈, 음성 인식</p>
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800" data-translate-key="tm_page_title">🤖 TM All-in-One for MCU</h1>
+            <p class="text-gray-500 mt-2" data-translate-key="tm_page_subtitle"><a href="https://teachablemachine.withgoogle.com/" target="_blank" class="text-blue-600 underline"><b>Teachable Machine</b></a> 통합 인터페이스 - 이미지, 포즈, 음성 인식</p>
         </div>
         
         <div class="tabs rounded-lg overflow-hidden border">
-            <button class="tab active" onclick="switchTab('image')">📷 이미지 인식</button>
-            <button class="tab" onclick="switchTab('pose')">🏃 포즈 인식</button>
-            <button class="tab" onclick="switchTab('voice')">🎤 음성 인식</button>
+            <button class="tab active" onclick="switchTab('image')" data-translate-key="tab_image">📷 이미지 인식</button>
+            <button class="tab" onclick="switchTab('pose')" data-translate-key="tab_pose">🏃 포즈 인식</button>
+            <button class="tab" onclick="switchTab('voice')" data-translate-key="tab_voice">🎤 음성 인식</button>
         </div>
         
         <div id="image-tab" class="tab-content active">
             <div class="card bg-gray-50 p-6 rounded-lg">
-                <h3 class="text-xl font-bold mb-4">📷 이미지 모델 설정</h3>
+                <h3 class="text-xl font-bold mb-4" data-translate-key="image_model_settings">📷 이미지 모델 설정</h3>
                 <div class="input-group">
-                    <label>Teachable Machine 이미지 모델 URL</label>
+                    <label data-translate-key="tm_model_url_image">Teachable Machine 이미지 모델 URL</label>
                     <input type="text" id="imageUrl" placeholder="https://teachablemachine.withgoogle.com/models/.../" class="w-full p-2 border rounded">
                 </div>
                 <div class="input-group">
-                    <label>인식 임계값 (0-100)</label>
+                    <label data-translate-key="threshold">인식 임계값 (0-100)</label>
                     <input type="number" id="imageThreshold" value="80" min="0" max="100" class="w-full p-2 border rounded">
                 </div>
-                <button class="btn btn-primary" onclick="loadImageModel()">모델 로드</button>
-                <button class="btn btn-primary" onclick="startImage()" id="startImageBtn" disabled>시작</button>
-                <button class="btn btn-danger" onclick="stopImage()" id="stopImageBtn" disabled>정지</button>
+                <button class="btn btn-primary" onclick="loadImageModel()" data-translate-key="load_model">모델 로드</button>
+                <button class="btn btn-primary" onclick="startImage()" id="startImageBtn" disabled data-translate-key="start">시작</button>
+                <button class="btn btn-danger" onclick="stopImage()" id="stopImageBtn" disabled data-translate-key="stop">정지</button>
             </div>
             <div class="canvas-container">
                 <div id="image-webcam-container"></div>
@@ -106,18 +99,18 @@
         
         <div id="pose-tab" class="tab-content">
             <div class="card bg-gray-50 p-6 rounded-lg">
-                <h3 class="text-xl font-bold mb-4">🏃 포즈 모델 설정</h3>
+                <h3 class="text-xl font-bold mb-4" data-translate-key="pose_model_settings">🏃 포즈 모델 설정</h3>
                 <div class="input-group">
-                    <label>Teachable Machine 포즈 모델 URL</label>
+                    <label data-translate-key="tm_model_url_pose">Teachable Machine 포즈 모델 URL</label>
                     <input type="text" id="poseUrl" placeholder="https://teachablemachine.withgoogle.com/models/.../" class="w-full p-2 border rounded">
                 </div>
                 <div class="input-group">
-                    <label>인식 임계값 (0-100)</label>
+                    <label data-translate-key="threshold">인식 임계값 (0-100)</label>
                     <input type="number" id="poseThreshold" value="80" min="0" max="100" class="w-full p-2 border rounded">
                 </div>
-                <button class="btn btn-primary" onclick="loadPoseModel()">모델 로드</button>
-                <button class="btn btn-primary" onclick="startPose()" id="startPoseBtn" disabled>시작</button>
-                <button class="btn btn-danger" onclick="stopPose()" id="stopPoseBtn" disabled>정지</button>
+                <button class="btn btn-primary" onclick="loadPoseModel()" data-translate-key="load_model">모델 로드</button>
+                <button class="btn btn-primary" onclick="startPose()" id="startPoseBtn" disabled data-translate-key="start">시작</button>
+                <button class="btn btn-danger" onclick="stopPose()" id="stopPoseBtn" disabled data-translate-key="stop">정지</button>
             </div>
             <div class="canvas-container">
                 <canvas id="canvas"></canvas>
@@ -126,17 +119,17 @@
         
         <div id="voice-tab" class="tab-content">
             <div class="card bg-gray-50 p-6 rounded-lg">
-                <h3 class="text-xl font-bold mb-4">🎤 음성 모델 설정</h3>
+                <h3 class="text-xl font-bold mb-4" data-translate-key="voice_model_settings">🎤 음성 모델 설정</h3>
                 <div class="input-group">
-                    <label>Teachable Machine 음성 모델 URL</label>
+                    <label data-translate-key="tm_model_url_voice">Teachable Machine 음성 모델 URL</label>
                     <input type="text" id="voiceUrl" placeholder="https://teachablemachine.withgoogle.com/models/.../" class="w-full p-2 border rounded">
                 </div>
                 <div class="input-group">
-                    <label>인식 임계값 (0-100)</label>
+                    <label data-translate-key="threshold">인식 임계값 (0-100)</label>
                     <input type="number" id="voiceThreshold" value="75" min="0" max="100" class="w-full p-2 border rounded">
                 </div>
-                <button class="btn btn-primary" onclick="startVoice()">음성 인식 시작</button>
-                <button class="btn btn-danger" onclick="stopVoice()" id="stopVoiceBtn" disabled>정지</button>
+                <button class="btn btn-primary" onclick="startVoice()" data-translate-key="start_voice">음성 인식 시작</button>
+                <button class="btn btn-danger" onclick="stopVoice()" id="stopVoiceBtn" disabled data-translate-key="stop">정지</button>
             </div>
             <div class="voice-visualizer bg-gray-800 rounded-lg p-4">
                 <div class="voice-bar"></div><div class="voice-bar"></div><div class="voice-bar"></div><div class="voice-bar"></div><div class="voice-bar"></div><div class="voice-bar"></div><div class="voice-bar"></div><div class="voice-bar"></div><div class="voice-bar"></div><div class="voice-bar"></div>
@@ -144,59 +137,59 @@
         </div>
         
         <div class="card mt-6">
-            <h3 class="text-xl font-bold mb-4">🔌 연결 설정</h3>
+            <h3 class="text-xl font-bold mb-4" data-translate-key="connection_settings">🔌 연결 설정</h3>
             
             <div class="input-group mb-4">
-                <label for="webcam-select" class="text-sm font-medium text-gray-700">웹캠 선택</label>
+                <label for="webcam-select" class="text-sm font-medium text-gray-700" data-translate-key="webcam_select">웹캠 선택</label>
                 <select id="webcam-select" class="w-full mt-1 p-2 border border-gray-300 rounded-md">
                     </select>
             </div>
 
             <div class="input-group mb-4">
-                <label for="ble-device-type" class="text-sm font-medium text-gray-700">블루투스 장치 유형</label>
+                <label for="ble-device-type" class="text-sm font-medium text-gray-700" data-translate-key="ble_device_type">블루투스 장치 유형</label>
                 <select id="ble-device-type" class="w-full mt-1 p-2 border border-gray-300 rounded-md">
-                    <option value="microbit">마이크로비트 (이름으로 검색)</option>
-                    <option value="generic">일반 UART 장치 (Arduino, ESP32 등)</option>
+                    <option value="microbit" data-translate-key="microbit_device">마이크로비트 (이름으로 검색)</option>
+                    <option value="generic" data-translate-key="generic_uart_device">일반 UART 장치 (Arduino, ESP32 등)</option>
                 </select>
             </div>
-            <button class="btn btn-primary" onclick="connectSerial()">시리얼 연결</button>
-            <button class="btn btn-danger" onclick="disconnectSerial()">해제</button>
-            <button class="btn btn-primary" onclick="connectBLE()">블루투스 연결</button>
-            <button class="btn btn-danger" onclick="disconnectBLE()">해제</button>
-            <span id="connectionStatus" class="status disconnected">연결 안됨</span>
+            <button class="btn btn-primary" onclick="connectSerial()" data-translate-key="serial_connect">시리얼 연결</button>
+            <button class="btn btn-danger" onclick="disconnectSerial()" data-translate-key="serial_disconnect">해제</button>
+            <button class="btn btn-primary" onclick="connectBLE()" data-translate-key="ble_connect">블루투스 연결</button>
+            <button class="btn btn-danger" onclick="disconnectBLE()" data-translate-key="ble_disconnect">해제</button>
+            <span id="connectionStatus" class="status disconnected" data-translate-key="status_disconnected">연결 안됨</span>
         </div>
         
-        <div class="result-display bg-blue-600 text-white p-6 rounded-lg text-center text-2xl font-bold shadow-lg">대기 중...</div>
+        <div class="result-display bg-blue-600 text-white p-6 rounded-lg text-center text-2xl font-bold shadow-lg" data-translate-key="status_waiting">대기 중...</div>
         
         <div class="predictions mt-4"></div>
         
         <div class="info-box mt-6">
-            <h4 class="text-lg font-bold">💡 사용 방법</h4>
+            <h4 class="text-lg font-bold" data-translate-key="usage_guide">💡 사용 방법</h4>
             <ol class="list-decimal list-inside mt-2 space-y-1">
-                <li>사용할 인식 모드(이미지/포즈/음성)를 선택하세요.</li>
-                <li>Teachable Machine에서 학습한 모델 URL을 입력하세요.</li>
-                <li>연결할 장치(시리얼 또는 블루투스)를 선택하고 연결하세요.</li>
-                <li>모델을 로드하고 시작 버튼을 누르세요.</li>
-                <li>인식된 결과가 자동으로 MCU로 전송됩니다.</li>
+                <li data-translate-key="guide_tm_1">사용할 인식 모드(이미지/포즈/음성)를 선택하세요.</li>
+                <li data-translate-key="guide_tm_2">Teachable Machine에서 학습한 모델 URL을 입력하세요.</li>
+                <li data-translate-key="guide_tm_3">연결할 장치(시리얼 또는 블루투스)를 선택하고 연결하세요.</li>
+                <li data-translate-key="guide_tm_4">모델을 로드하고 시작 버튼을 누르세요.</li>
+                <li data-translate-key="guide_tm_5">인식된 결과가 자동으로 MCU로 전송됩니다.</li>
             </ol>
         </div>
 
         <div class="info-box">
-            <h4>👨‍💻 개발자 정보</h4>
-            <p>김석전, 송도중학교 정보교사 / 인하대학교 겸임교수. since 2023.04.24. alphaco@kakao.com</p>
+            <h4 data-translate-key="developer_info">👨‍💻 개발자 정보</h4>
+            <p data-translate-key="developer_name">김석전, 송도중학교 정보교사 / 인하대학교 겸임교수. since 2023.04.24. alphaco@kakao.com</p>
             <hr style="margin: 10px 0; border: 0; border-top: 1px solid #ddd;">
-            <p>WebSerial과 WebBLE를 이용해 TM 결과물을 유/무선 MCU로 전송하는 로컬 웹앱입니다.</p>
-            <p>아두이노, 마이크로비트, ESP32, 라즈베리파이 피코 등 모든 MCU를 사용할 수 있습니다.</p>
-            <p>Chrome, Edge 브라우저에서 테스트 되었습니다. 하드웨어는 블록코딩이나 텍스트 코딩을 이용해 사전 코드 업로드가 필요합니다.</p>
-            <p>아두이노의 전송 데이터는 문자열이므로 아스키코드로 변환해야 합니다.</p>
-            <p>다양한 출력장치를 연결하여 AIoT 애플리케이션을 제작해 보세요.</p>
-            <p>CCL: BY-NC-ND</p>
+            <p data-translate-key="app_description_1">WebSerial과 WebBLE를 이용해 TM 결과물을 유/무선 MCU로 전송하는 로컬 웹앱입니다.</p>
+            <p data-translate-key="app_description_2">아두이노, 마이크로비트, ESP32, 라즈베리파이 피코 등 모든 MCU를 사용할 수 있습니다.</p>
+            <p data-translate-key="app_description_3">Chrome, Edge 브라우저에서 테스트 되었습니다. 하드웨어는 블록코딩이나 텍스트 코딩을 이용해 사전 코드 업로드가 필요합니다.</p>
+            <p data-translate-key="app_description_4">아두이노의 전송 데이터는 문자열이므로 아스키코드로 변환해야 합니다.</p>
+            <p data-translate-key="app_description_5">다양한 출력장치를 연결하여 AIoT 애플리케이션을 제작해 보세요.</p>
+            <p data-translate-key="ccl">CCL: BY-NC-ND</p>
         </div>
 
     </div>
 
     <script>
-        // 전역 변수
+        // 전역 변수 (변경 없음)
         let currentTab = 'image';
         let models = { image: null, pose: null, voice: null };
         let webcams = { image: null, pose: null };
@@ -210,7 +203,7 @@
         let poseCtx = null;
         let selectedDeviceId = null; 
         
-        // 탭 전환
+        // 탭 전환 (변경 없음)
         function switchTab(tab) {
             if (isRunning.image && tab !== 'image') stopImage();
             if (isRunning.pose && tab !== 'pose') stopPose();
@@ -234,7 +227,7 @@
 
                 if (videoDevices.length === 0) {
                     const option = document.createElement('option');
-                    option.textContent = '연결된 웹캠이 없습니다.';
+                    option.textContent = _t('no_webcam');
                     webcamSelect.appendChild(option);
                     return;
                 }
@@ -242,7 +235,7 @@
                 videoDevices.forEach((device, index) => {
                     const option = document.createElement('option');
                     option.value = device.deviceId;
-                    option.textContent = device.label || `웹캠 ${index + 1}`;
+                    option.textContent = device.label || `Webcam ${index + 1}`;
                     webcamSelect.appendChild(option);
                 });
 
@@ -250,7 +243,7 @@
 
                 webcamSelect.addEventListener('change', (e) => {
                     selectedDeviceId = e.target.value;
-                    alert(`웹캠이 ${e.target.options[e.target.selectedIndex].text}(으)로 변경되었습니다.`);
+                    alert(_t('webcam_changed', { webcamName: e.target.options[e.target.selectedIndex].text }));
                     
                     if (isRunning.image) stopImage();
                     if (isRunning.pose) stopPose();
@@ -259,7 +252,7 @@
             } catch (error) {
                 console.error("웹캠 목록을 가져오는 중 오류 발생:", error);
                 const option = document.createElement('option');
-                option.textContent = '웹캠 접근 권한이 필요합니다.';
+                option.textContent = _t('webcam_permission');
                 webcamSelect.appendChild(option);
             }
         }
@@ -269,7 +262,7 @@
         async function sendToMCU(data) {
             if (data === lastSentClass) return;
             lastSentClass = data;
-            document.querySelector('.result-display').textContent = `인식: ${data}`;
+            document.querySelector('.result-display').textContent = _t('recognition_result', { result: data });
             const dataToSend = data + '\n';
             if (port?.writable) {
                 const writer = port.writable.getWriter();
@@ -283,6 +276,7 @@
             }
         }
         
+        // displayPredictions 함수는 변경 없음
         function displayPredictions(predictions) {
             const container = document.querySelector('.predictions');
             container.innerHTML = predictions.map(p => `
@@ -301,16 +295,17 @@
         
         async function loadImageModel() {
             const url = document.getElementById('imageUrl').value;
-            if (!url) return alert('이미지 모델 URL을 입력하세요');
+            if (!url) return alert(_t('enter_model_url', { modelType: 'Image' }));
             try {
                 const modelURL = url + "model.json";
                 const metadataURL = url + "metadata.json";
                 models.image = await tmImage.load(modelURL, metadataURL);
                 document.getElementById('startImageBtn').disabled = false;
-                alert('이미지 모델 로드 완료');
-            } catch (error) { alert('모델 로드 실패: ' + error.message); }
+                alert(_t('model_loaded', { modelType: 'Image' }));
+            } catch (error) { alert(_t('model_load_failed', { error: error.message })); }
         }
         
+        // startImage, stopImage, loopImage 함수는 변경 없음
         async function startImage() {
             if (!models.image) return;
             webcams.image = new tmImage.Webcam(400, 400, true);
@@ -349,16 +344,17 @@
         
         async function loadPoseModel() {
             const url = document.getElementById('poseUrl').value;
-            if (!url) return alert('포즈 모델 URL을 입력하세요');
+            if (!url) return alert(_t('enter_model_url', { modelType: 'Pose' }));
             try {
                 const modelURL = url + "model.json";
                 const metadataURL = url + "metadata.json";
                 models.pose = await tmPose.load(modelURL, metadataURL);
                 document.getElementById('startPoseBtn').disabled = false;
-                alert('포즈 모델 로드 완료');
-            } catch (error) { alert('모델 로드 실패: ' + error.message); }
+                alert(_t('model_loaded', { modelType: 'Pose' }));
+            } catch (error) { alert(_t('model_load_failed', { error: error.message })); }
         }
         
+        // startPose, loopPose, predictPose, drawPose, stopPose 함수는 변경 없음
         async function startPose() {
             if (!models.pose) return;
             const canvas = document.getElementById('canvas');
@@ -413,7 +409,7 @@
         
         async function startVoice() {
             const url = document.getElementById('voiceUrl').value;
-            if (!url) return alert('음성 모델 URL을 입력하세요');
+            if (!url) return alert(_t('enter_model_url', { modelType: 'Sound' }));
             try {
                 const modelURL = url + "model.json";
                 const metadataURL = url + "metadata.json";
@@ -421,7 +417,7 @@
                 await recognizer.ensureModelLoaded();
                 isRunning.voice = true;
                 document.getElementById('stopVoiceBtn').disabled = false;
-                alert('음성 인식 시작');
+                alert(_t('voice_recognition_started'));
                 recognizer.listen(result => {
                     if (!isRunning.voice) return;
                     const labels = recognizer.wordLabels();
@@ -438,7 +434,7 @@
 
                         if (isBackgroundNoise) {
                             if (currentClass !== lastSentClass) {
-                                document.querySelector('.result-display').textContent = `인식: ${currentClass}`;
+                                document.querySelector('.result-display').textContent = _t('recognition_result', { result: currentClass });
                                 lastSentClass = currentClass;
                             }
                         } else {
@@ -451,9 +447,10 @@
                     invokeCallbackOnNoiseAndUnknown: true, 
                     overlapFactor: 0.50 
                 });
-            } catch (error) { alert('모델 로드 실패: ' + error.message); }
+            } catch (error) { alert(_t('model_load_failed', { error: error.message })); }
         }
         
+        // stopVoice 함수는 변경 없음
         function stopVoice() {
             isRunning.voice = false;
             if (recognizer?.isListening()) { recognizer.stopListening(); }
@@ -466,8 +463,8 @@
             try {
                 port = await navigator.serial.requestPort();
                 await port.open({ baudRate: 9600 });
-                updateConnectionStatus(true, '시리얼');
-            } catch (error) { alert('시리얼 연결 실패: ' + error.message); }
+                updateConnectionStatus(true, _t('serial_connect').split(' ')[0]); // "시리얼" 또는 "Serial"
+            } catch (error) { alert(_t('serial_connect_failed', { error: error.message })); }
         }
         
         async function disconnectSerial() {
@@ -485,10 +482,10 @@
                 const server = await bleDevice.gatt.connect();
                 const service = await server.getPrimaryService('6e400001-b5a3-f393-e0a9-e50e24dcca9e');
                 bleCharacteristic = await service.getCharacteristic('6e400003-b5a3-f393-e0a9-e50e24dcca9e');
-                updateConnectionStatus(true, '블루투스');
-                alert('블루투스 연결 성공!');
+                updateConnectionStatus(true, _t('ble_connect').split(' ')[0]); // "블루투스" 또는 "Bluetooth"
+                alert(_t('ble_connect_success'));
             } catch (error) {
-                alert('블루투스 연결 실패: ' + error.message);
+                alert(_t('ble_connect_failed', { error: error.message }));
                 updateConnectionStatus(false);
             }
         }
@@ -504,7 +501,7 @@
         
         function updateConnectionStatus(connected, type = '') {
             const statusEl = document.getElementById('connectionStatus');
-            statusEl.textContent = connected ? `${type} 연결됨` : '연결 안됨';
+            statusEl.textContent = connected ? _t('status_connected', { connectionType: type }) : _t('status_disconnected');
             statusEl.className = `status ${connected ? 'connected' : 'disconnected'}`;
         }
 
@@ -514,7 +511,7 @@
         // 마우스 우클릭 방지
         document.addEventListener('contextmenu', function(e) {
             e.preventDefault();
-            alert('소스 보기는 금지되어 있습니다.');
+            alert(_t('context_menu_blocked'));
         });
     </script>
 </body>
