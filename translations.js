@@ -9,8 +9,6 @@ const translations = {
         "face_description": "MediaPipe 미간 좌표, 하품, 눈 깜박임, 얼굴 개수, 크기 등을 사용하여 MCU를 제어합니다.",
         "hand_title": "손가락인식 올인원 서비스",
         "hand_description": "MediaPipe로 검지좌표, 엄지-검지 길이, 손가락 카운팅 등을 사용하여 MCU를 제어합니다.",
-        "service3_title": "서비스 3",
-        "service3_description": "새로운 인공지능 서비스가 준비중입니다. 기대해주세요!",
         "service4_title": "서비스 4",
         "service4_description": "다양한 아이디어를 바탕으로 한 멋진 기능을 준비하고 있습니다.",
         "go_to_service": "서비스 바로가기",
@@ -105,23 +103,27 @@ const translations = {
         "recognizing": "인식 중...",
         "serial_connect_error": "시리얼 연결 실패: {error}",
         "ble_connect_error": "블루투스 연결 실패: {error}",
-        "admin_prompt": "🔐 오늘의 관리자 인증 코드를 입력하세요:",
-        "admin_success": "✅ 관리자 모드가 활성화되었습니다.",
-        "admin_fail": "❌ 잘못된 인증 코드입니다.",
-        "admin_no_log": "다운로드할 로그가 없습니다.",
-        "admin_log_header_num": "번호",
-        "admin_log_header_date": "날짜",
-        "admin_log_header_time": "시간",
-        "admin_log_header_ip": "IP주소",
-        "admin_log_header_country": "국가",
-        "admin_log_header_city": "도시",
-        "admin_log_header_referrer": "참조페이지",
-        "admin_log_direct_access": "직접 접속",
-        "admin_log_table_title": "관리자 방문자 로그",
-        "total_visits": "총 {count}개의 방문 기록",
-        "last_updated": "최근 업데이트: {datetime}",
-        "recent_100_logs_message": "최근 100개 기록만 표시됩니다. 전체 로그는 CSV 다운로드를 이용하세요.",
-        "no_visit_record": "아직 방문 기록이 없습니다."
+
+        // ▼▼▼ HAND 페이지용 번역 추가 ▼▼▼
+        "hand_page_title": "✋ 손가락 인식 올인원",
+        "hand_page_subtitle": "MediaPipe의 손 인식 기술을 활용한 다양한 기능을 제공합니다.",
+        "tab_hand_coords": "👆 검지좌표",
+        "tab_thumb_dist": "📏 엄지-검지 길이",
+        "tab_finger_count": "🖐️ 손가락 카운팅",
+        "tab_dual_coords": "✌️ 양손 검지좌표",
+        "tab_hand_service5": "✨ 서비스 5",
+        "tab_hand_service6": "✨ 서비스 6",
+        "index_finger_coords": "검지 끝 좌표",
+        "thumb_index_dist": "엄지-검지 사이 거리",
+        "finger_count": "편 손가락 개수",
+        "unit_fingers": "개",
+        "dual_hand_coords": "양손 검지 좌표",
+        "guide_hand_1": "상단 탭에서 원하는 손 인식 기능을 선택하세요.",
+        "guide_hand_2": "'인식 시작' 버튼을 클릭하여 카메라를 활성화하세요.",
+        "guide_hand_3": "MCU 장치를 시리얼 또는 블루투스로 연결하세요.",
+        "guide_hand_4": "손이 인식되면 실시간으로 데이터가 MCU로 전송됩니다.",
+        "guide_hand_5": "MCU에서 수신한 데이터를 활용하여 다양한 출력장치를 제어하세요.",
+        "developer_info_hand": "WebSerial과 WebBLE를 이용해 손가락 랜드마크 결과를 유/무선으로 MCU에 전송하는 로컬 웹앱입니다."
     },
     "en": {
         "main_title": "AI-EDU-KIT for MCU",
@@ -133,8 +135,6 @@ const translations = {
         "face_description": "Control your MCU using MediaPipe's glabella coordinates, yawning, blinking, face count, size, and more.",
         "hand_title": "Hand Recognition All-in-One Service",
         "hand_description": "Control MCUs using MediaPipe for index finger coordinates, thumb-index length, finger counting, and dual-hand index coordinates.",
-        "service3_title": "Service 3",
-        "service3_description": "A new AI service is in the works. Please look forward to it!",
         "service4_title": "Service 4",
         "service4_description": "We are preparing a great feature based on various ideas.",
         "go_to_service": "Go to Service",
@@ -229,25 +229,28 @@ const translations = {
         "recognizing": "Recognizing...",
         "serial_connect_error": "Serial connection failed: {error}",
         "ble_connect_error": "Bluetooth connection failed: {error}",
-        "admin_prompt": "🔐 Please enter today's admin authentication code:",
-        "admin_success": "✅ Admin mode activated.",
-        "admin_fail": "❌ Incorrect authentication code.",
-        "admin_no_log": "No logs to download.",
-        "admin_log_header_num": "No.",
-        "admin_log_header_date": "Date",
-        "admin_log_header_time": "Time",
-        "admin_log_header_ip": "IP Address",
-        "admin_log_header_country": "Country",
-        "admin_log_header_city": "City",
-        "admin_log_header_referrer": "Referrer",
-        "admin_log_direct_access": "Direct Access",
-        "admin_log_table_title": "Admin Visitor Log",
-        "total_visits": "Total {count} visits",
-        "last_updated": "Last updated: {datetime}",
-        "recent_100_logs_message": "Only the latest 100 records are displayed. Use CSV download for the full log.",
-        "no_visit_record": "No visit records yet."
-    },
-    // Add other languages like 'ja', 'zh-CN' etc. in the same format.
+
+        // ▼▼▼ Additions for HAND Page ▼▼▼
+        "hand_page_title": "✋ Hand Recognition All-in-One",
+        "hand_page_subtitle": "Provides various functions utilizing MediaPipe's hand recognition technology.",
+        "tab_hand_coords": "👆 Index Coords",
+        "tab_thumb_dist": "📏 Thumb-Index Dist",
+        "tab_finger_count": "🖐️ Finger Counting",
+        "tab_dual_coords": "✌️ Dual Hand Coords",
+        "tab_hand_service5": "✨ Service 5",
+        "tab_hand_service6": "✨ Service 6",
+        "index_finger_coords": "Index Finger Tip Coordinates",
+        "thumb_index_dist": "Distance between Thumb and Index",
+        "finger_count": "Number of Extended Fingers",
+        "unit_fingers": "fingers",
+        "dual_hand_coords": "Dual Hand Index Coordinates",
+        "guide_hand_1": "Select the desired hand recognition function from the top tab.",
+        "guide_hand_2": "Click the 'Start Recognition' button to activate the camera.",
+        "guide_hand_3": "Connect your MCU device via Serial or Bluetooth.",
+        "guide_hand_4": "When a hand is recognized, data is sent to the MCU in real-time.",
+        "guide_hand_5": "Utilize the received data on the MCU to control various output devices.",
+        "developer_info_hand": "A local web app that sends hand landmark results to wired/wireless MCUs using WebSerial and WebBLE."
+    }
 };
 
 let currentLanguage = 'ko';
@@ -258,8 +261,10 @@ function _t(key, replacements = {}) {
         lang = 'ko'; // Fallback to Korean
     }
     let text = translations[lang][key] || translations['ko'][key] || key;
-    for (const placeholder in replacements) {
-        text = text.replace(`{${placeholder}}`, replacements[placeholder]);
+    if (text) { 
+        for (const placeholder in replacements) {
+            text = text.replace(`{${placeholder}}`, replacements[placeholder]);
+        }
     }
     return text;
 }
@@ -270,11 +275,14 @@ function setLanguage() {
 
     document.querySelectorAll('[data-translate-key]').forEach(el => {
         const key = el.getAttribute('data-translate-key');
-        // Use innerHTML for keys that might contain HTML tags like links
-        if (key === 'tm_page_subtitle' || key === 'footer_copyright') {
-            el.innerHTML = _t(key);
+        const translatedText = _t(key);
+        
+        if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+            if(el.placeholder) el.placeholder = translatedText;
+        } else if (key.includes('subtitle') || key.includes('copyright')) {
+             el.innerHTML = translatedText;
         } else {
-            el.innerText = _t(key);
+            el.innerText = translatedText;
         }
     });
 }
