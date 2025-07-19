@@ -34,7 +34,7 @@
         <header class="text-center mb-12">
             <h1 class="text-4xl md:text-6xl font-black text-gray-800" data-translate-key="main_title">AI-EDU-KIT for MCU</h1>
             <p class="text-lg text-gray-500 mt-4" data-translate-key="main_subtitle">영상처리 인공지능을 활용해 하드웨어를 제어하는 멋진 경험을 해보세요.</p>
-            <p class="text-lg text-gray-500 mt-4" data-translate-key="main_description">마이크로비트, 아두이노, ESP32, RP 피코를 웹시리얼과 웹BLE로 연결할 수 있어요. </p>
+            <p class="text-lg text-gray-500 mt-4" data-translate-key="main_description">마이크로비트, 아두이노, ESP32, RP 피코를 유선과 무선으로 연결해 제어할 수 있어요. </p>
         </header>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -79,20 +79,27 @@
                 </div>
             </a>
 
-            <div class="service-card disabled bg-white rounded-2xl shadow-lg overflow-hidden">
+            <a href="HAND_AllinOne4MCU_V10.html" class="service-card block bg-white rounded-2xl shadow-lg overflow-hidden">
                 <div class="p-8">
                     <div class="flex items-center mb-4">
                         <div class="bg-yellow-100 text-yellow-800 p-3 rounded-full">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" /></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+                            </svg>
                         </div>
-                        <h2 class="text-2xl font-bold text-gray-800 ml-4" data-translate-key="service3_title">서비스 3</h2>
+                        <div class="ml-4 flex-1">
+                            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                                <h2 class="text-2xl font-bold text-gray-800 mb-2 sm:mb-0" data-translate-key="hand_title">손가락인식 올인원 서비스</h2>
+                                <img src="MP.png" alt="MediaPipe" class="h-8 sm:h-10 w-auto object-contain" onerror="this.style.display='none'">
+                            </div>
+                        </div>
                     </div>
-                    <p class="text-gray-600" data-translate-key="service3_description">새로운 인공지능 서비스가 준비중입니다. 기대해주세요!</p>
+                    <p class="text-gray-600" data-translate-key="hand_description">MediaPipe로 검지좌표, 엄지-검지 길이, 손가락 카운팅, 양손 검지좌표 등을 사용하여 MCU를 제어합니다.</p>
                 </div>
-                <div class="bg-gray-400 text-white text-center font-bold py-2" data-translate-key="coming_soon">
-                    개발중
+                <div class="bg-yellow-500 text-white text-center font-bold py-2" data-translate-key="go_to_service">
+                    서비스 바로가기
                 </div>
-            </div>
+            </a>
 
             <div class="service-card disabled bg-white rounded-2xl shadow-lg overflow-hidden">
                 <div class="p-8">
