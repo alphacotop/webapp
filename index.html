@@ -49,44 +49,45 @@
 
              <div id="result-display" class="mt-4 text-2xl font-bold text-center h-8"></div>
             
-            <div class="w-full max-w-2xl mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="w-full max-w-2xl mt-6">
                 <div class="card p-4 bg-gray-50 rounded-lg">
-                    <h3 class="text-lg font-bold mb-3">👨‍🎓 얼굴 학습</h3>
-                    <div class="flex items-center gap-2 mb-3">
-                        <input type="text" id="name-input" placeholder="이름 입력 (영문)" class="input-box flex-grow">
-                        <button id="register-btn" class="btn btn-info" style="margin: 0;">등록</button>
+                    <h3 class="text-lg font-bold mb-3">👨‍🎓 얼굴 학습 및 값 설정</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+                        <input type="text" id="name-input" placeholder="이름 입력 (영문)" class="input-box">
+                        <input type="text" id="value-input" placeholder="전송할 값 입력 (예: 1)" class="input-box">
                     </div>
+                    <button id="register-btn" class="btn btn-info w-full mb-3" style="margin: 0;">이 얼굴로 등록/추가</button>
                     <div id="registered-users-list" class="space-y-2 mb-3"></div>
                     <button id="clear-btn" class="btn btn-danger w-full" style="margin: 0;">모든 얼굴 삭제</button>
-                </div>
-
-                <div class="card p-4 bg-gray-50 rounded-lg">
-                    <h3 class="text-lg font-bold mb-3">🔌 연결 설정</h3>
-                    <div class="input-group mb-4">
-                        <label for="ble-device-type" class="text-sm font-medium text-gray-700">블루투스 장치 유형</label>
-                        <select id="ble-device-type" class="w-full mt-1 p-2 border border-gray-300 rounded-md">
-                            <option value="microbit">마이크로비트 (이름으로 검색)</option>                    
-                            <option value="generic">일반 UART 장치 (Arduino, ESP32 등)</option>
-                        </select>
-                    </div>
-                    <div class="flex flex-wrap">
-                        <button id="connectSerialBtn" class="btn btn-primary">시리얼 연결</button>
-                        <button id="disconnectSerialBtn" class="btn btn-danger" disabled>해제</button>
-                        <button id="connectBleBtn" class="btn btn-primary">블루투스 연결</button>
-                        <button id="disconnectBleBtn" class="btn btn-danger">해제</button>
-                    </div>
-                    <span id="connectionStatus" class="status disconnected">연결 안됨</span>
                 </div>
             </div>
         </main>
 
+        <div class="card mt-6 p-4 bg-gray-50 rounded-lg">
+            <h3 class="text-lg font-bold mb-3">🔌 연결 설정</h3>
+            <div class="input-group mb-4">
+                <label for="ble-device-type" class="text-sm font-medium text-gray-700">블루투스 장치 유형</label>
+                <select id="ble-device-type" class="w-full mt-1 p-2 border border-gray-300 rounded-md">
+                    <option value="microbit">마이크로비트 (이름으로 검색)</option>                    
+                    <option value="generic">일반 UART 장치 (Arduino, ESP32 등)</option>
+                </select>
+            </div>
+            <div class="flex flex-wrap">
+                <button id="connectSerialBtn" class="btn btn-primary">시리얼 연결</button>
+                <button id="disconnectSerialBtn" class="btn btn-danger" disabled>해제</button>
+                <button id="connectBleBtn" class="btn btn-primary">블루투스 연결</button>
+                <button id="disconnectBleBtn" class="btn btn-danger">해제</button>
+            </div>
+            <span id="connectionStatus" class="status disconnected">연결 안됨</span>
+        </div>
+
         <div class="card mt-6 p-4 bg-blue-50 rounded-lg">
             <h3 class="text-lg font-bold mb-3">💡 사용 방법</h3>
             <ol class="list-decimal list-inside space-y-2 text-sm text-gray-700">
-                <li>'얼굴 학습' 메뉴에서 이름을 입력하고 '등록' 버튼을 눌러 얼굴을 등록합니다.</li>
+                <li>'얼굴 학습' 메뉴에서 이름과 전송할 값을 입력하고 '등록' 버튼을 눌러 얼굴을 등록합니다.</li>
                 <li>'연결 설정' 메뉴에서 제어할 장치(아두이노, 마이크로비트 등)를 연결합니다.</li>
                 <li>카메라에 얼굴을 비추면 실시간으로 인식이 시작됩니다.</li>
-                <li>등록된 사용자는 '인증됨' 메시지와 함께 <b>1</b> 신호가, 미등록 사용자는 <b>0</b> 신호가 장치로 전송됩니다.</li>
+                <li>등록된 사용자는 '인증됨' 메시지와 함께 <b>설정한 값</b>이, 미등록 사용자는 <b>0</b> 신호가 장치로 전송됩니다.</li>
             </ol>
             <div class="mt-4 pt-3 border-t">
                 <h4 class="font-bold text-md text-blue-800">## 사용 팁</h4>
@@ -100,7 +101,7 @@
                 </ul>
             </div>
         </div>
-
+        
         <div class="card mt-6 p-4 bg-gray-100 rounded-lg">
             <h3 class="text-lg font-bold mb-3">👨‍💻 개발자 정보</h3>
             <div class="text-sm text-gray-600 space-y-2">
@@ -117,7 +118,7 @@
                 </div>
             </div>
         </div>
-        </div>
+    </div>
 
     <script>
         const ui = {
@@ -126,6 +127,7 @@
             loader: document.getElementById('loader'),
             loadingText: document.getElementById('loading-text'),
             nameInput: document.getElementById('name-input'),
+            valueInput: document.getElementById('value-input'),
             registerBtn: document.getElementById('register-btn'),
             clearBtn: document.getElementById('clear-btn'),
             registeredUsersList: document.getElementById('registered-users-list'),
@@ -274,9 +276,10 @@
                 const data = localStorage.getItem(CONFIG.LOCAL_STORAGE_KEY);
                 if (data) {
                     const parsedData = JSON.parse(data);
-                    this.registeredUsers = parsedData.map(user => 
-                        new faceapi.LabeledFaceDescriptors(user.label, user.descriptors.map(d => new Float32Array(d)))
-                    );
+                    this.registeredUsers = parsedData.map(user => ({
+                        ...user,
+                        descriptors: new faceapi.LabeledFaceDescriptors(user.label, user.descriptors.map(d => new Float32Array(d)))
+                    }));
                 }
                 this.updateFaceMatcher();
                 this.updateRegisteredUsersUI();
@@ -285,7 +288,8 @@
             saveRegisteredFaces() {
                 const dataToSave = this.registeredUsers.map(user => ({
                     label: user.label,
-                    descriptors: user.descriptors.map(d => Array.from(d))
+                    value: user.value,
+                    descriptors: user.descriptors.descriptors.map(d => Array.from(d))
                 }));
                 localStorage.setItem(CONFIG.LOCAL_STORAGE_KEY, JSON.stringify(dataToSave));
             },
@@ -295,7 +299,7 @@
                 this.registeredUsers.forEach(user => {
                     const userEl = document.createElement('div');
                     userEl.className = 'user-list-item';
-                    userEl.innerHTML = `<span>👤 ${user.label} (${user.descriptors.length}회 등록)</span><button data-label="${user.label}">&times;</button>`;
+                    userEl.innerHTML = `<span>👤 ${user.label} → <b>${user.value}</b> (${user.descriptors.descriptors.length}회)</span><button data-label="${user.label}">&times;</button>`;
                     ui.registeredUsersList.appendChild(userEl);
                 });
                 ui.registeredUsersList.querySelectorAll('button').forEach(btn => {
@@ -309,8 +313,9 @@
                     return;
                 }
                 const name = ui.nameInput.value.trim();
-                if (!name) {
-                    alert("이름을 입력해주세요.");
+                const value = ui.valueInput.value.trim();
+                if (!name || !value) {
+                    alert("이름과 전송할 값을 모두 입력해주세요.");
                     return;
                 }
 
@@ -326,16 +331,21 @@
                 const existingUser = this.registeredUsers.find(user => user.label === name);
 
                 if (existingUser) {
-                    existingUser.descriptors.push(detections.descriptor);
-                    ui.resultDisplay.textContent = `${name}님의 새로운 얼굴 정보 추가 완료!`;
+                    existingUser.value = value;
+                    existingUser.descriptors.descriptors.push(detections.descriptor);
+                    ui.resultDisplay.textContent = `${name}님의 정보 업데이트 및 얼굴 추가 완료!`;
 
                 } else {
                     if (this.registeredUsers.length >= CONFIG.MAX_USERS) {
                         alert(`최대 ${CONFIG.MAX_USERS}명까지만 등록할 수 있습니다.`);
                         return;
                     }
-                    const newDescriptor = new faceapi.LabeledFaceDescriptors(name, [detections.descriptor]);
-                    this.registeredUsers.push(newDescriptor);
+                    const newUserData = {
+                        label: name,
+                        value: value,
+                        descriptors: new faceapi.LabeledFaceDescriptors(name, [detections.descriptor])
+                    };
+                    this.registeredUsers.push(newUserData);
                     ui.resultDisplay.textContent = `${name}님 신규 등록 완료!`;
                 }
                 
@@ -344,6 +354,7 @@
                 this.updateRegisteredUsersUI();
 
                 ui.nameInput.value = '';
+                ui.valueInput.value = '';
                 setTimeout(() => ui.resultDisplay.textContent = '', 2000);
             },
             
@@ -365,7 +376,8 @@
             
             updateFaceMatcher() {
                 if (this.registeredUsers.length > 0) {
-                    this.faceMatcher = new faceapi.FaceMatcher(this.registeredUsers, CONFIG.RECOGNITION_THRESHOLD);
+                    const labeledDescriptors = this.registeredUsers.map(user => user.descriptors);
+                    this.faceMatcher = new faceapi.FaceMatcher(labeledDescriptors, CONFIG.RECOGNITION_THRESHOLD);
                 } else {
                     this.faceMatcher = null;
                 }
@@ -400,9 +412,12 @@
                             drawBox.draw(ui.canvas);
 
                             if (result.label !== 'unknown') {
-                                ui.resultDisplay.innerHTML = `✅ <span style="color:var(--primary)">${result.label}</span>님, 인증되었습니다.`;
-                                ConnectionManager.sendToMCU('1');
-                                recognized = true;
+                                const recognizedUser = this.registeredUsers.find(user => user.label === result.label);
+                                if (recognizedUser) {
+                                    ui.resultDisplay.innerHTML = `✅ <span style="color:var(--primary)">${result.label}</span>님, 인증되었습니다. (전송값: ${recognizedUser.value})`;
+                                    ConnectionManager.sendToMCU(recognizedUser.value);
+                                    recognized = true;
+                                }
                             }
                         });
 
