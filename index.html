@@ -30,6 +30,13 @@
         .input-box { border: 1px solid var(--border); padding: 10px; border-radius: 8px; width:100%; }
         .user-list-item { background: #e8f5e9; padding: 8px 12px; border-radius: 20px; font-weight: 500; display: flex; align-items: center; justify-content: space-between; }
         .user-list-item button { background: var(--danger); color: white; border-radius: 50%; width: 24px; height: 24px; line-height: 24px; text-align: center; border:none; cursor:pointer; }
+        /* 토글 스위치 스타일 */
+        .switch { position: relative; display: inline-block; width: 50px; height: 28px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 28px; }
+        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--primary); }
+        input:checked + .slider:before { transform: translateX(22px); }
     </style>
 </head>
 <body class="p-4">
@@ -70,20 +77,30 @@
                         <option value="generic">일반 UART 장치 (Arduino, ESP32 등)</option>
                     </select>
                 </div>
-                <div class="flex flex-wrap">
+                <div class="flex flex-wrap items-center">
                     <button id="connectSerialBtn" class="btn btn-primary">시리얼 연결</button>
                     <button id="disconnectSerialBtn" class="btn btn-danger" disabled>해제</button>
                     <button id="connectBleBtn" class="btn btn-primary">블루투스 연결</button>
                     <button id="disconnectBleBtn" class="btn btn-danger">해제</button>
+                    <span id="connectionStatus" class="status disconnected">연결 안됨</span>
                 </div>
-                <span id="connectionStatus" class="status disconnected">연결 안됨</span>
+                <div class="mt-4 pt-4 border-t flex items-center justify-between">
+                    <div class="flex items-center">
+                        <span class="text-sm font-medium text-gray-700">*</span>
+                        <span id="send-mode-status" class="ml-2 text-sm font-bold"></span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="send-once-toggle" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
             </div>
 
             <div class="card p-4 bg-blue-50 rounded-lg">
                 <h3 class="text-lg font-bold mb-3">💡 사용 방법</h3>
                 <ol class="list-decimal list-inside space-y-2 text-sm text-gray-700">
                     <li>'얼굴 학습' 메뉴에서 이름과 전송할 값을 입력하고 '등록' 버튼을 눌러 얼굴을 등록합니다.</li>
-                    <li>'연결 설정' 메뉴에서 제어할 장치(아두이노, 마이크로비트 등)를 연결합니다.</li>
+                    <li>'연결 설정' 메뉴에서 제어할 장치를 연결하고, 값 전송 방식을 선택합니다(1회/연속).</li>
                     <li>카메라에 얼굴을 비추면 실시간으로 인식이 시작됩니다.</li>
                     <li>등록된 사용자는 '인증됨' 메시지와 함께 <b>설정한 값</b>이, 미등록 사용자는 <b>0</b> 신호가 장치로 전송됩니다.</li>
                 </ol>
@@ -136,7 +153,9 @@
             connectBleBtn: document.getElementById('connectBleBtn'),
             disconnectBleBtn: document.getElementById('disconnectBleBtn'),
             connectionStatus: document.getElementById('connectionStatus'),
-            bleDeviceType: document.getElementById('ble-device-type')
+            bleDeviceType: document.getElementById('ble-device-type'),
+            sendOnceToggle: document.getElementById('send-once-toggle'),
+            sendModeStatus: document.getElementById('send-mode-status') // *** 여기가 추가된 부분 ***
         };
 
         const CONFIG = {
@@ -223,9 +242,12 @@
             registeredUsers: [],
             faceMatcher: null,
             modelsLoaded: false, 
+            sendOnce: true,
+            lastRecognizedLabel: null,
 
             async init() {
                 this.setupEventListeners();
+                this.updateSendModeStatus(); // *** 여기가 추가된 부분 ***
                 this.startWebcam();
                 await this.loadModels();
                 this.loadRegisteredFaces();
@@ -238,6 +260,21 @@
                 ui.disconnectSerialBtn.addEventListener('click', () => ConnectionManager.disconnectSerial());
                 ui.connectBleBtn.addEventListener('click', () => ConnectionManager.connectBLE());
                 ui.disconnectBleBtn.addEventListener('click', () => ConnectionManager.disconnectBLE());
+                ui.sendOnceToggle.addEventListener('change', (e) => {
+                    this.sendOnce = e.target.checked;
+                    this.updateSendModeStatus(); // *** 여기가 추가된 부분 ***
+                });
+            },
+
+            // *** 여기가 추가된 부분: 토글 상태 표시 업데이트 함수 ***
+            updateSendModeStatus() {
+                if (this.sendOnce) {
+                    ui.sendModeStatus.textContent = 'once';
+                    ui.sendModeStatus.className = 'ml-2 text-sm font-bold text-green-600';
+                } else {
+                    ui.sendModeStatus.textContent = 'continuously';
+                    ui.sendModeStatus.className = 'ml-2 text-sm font-bold text-blue-600';
+                }
             },
 
             async loadModels() {
@@ -387,9 +424,7 @@
                 faceapi.matchDimensions(ui.canvas, displaySize);
 
                 setInterval(async () => {
-                    if (!this.modelsLoaded) {
-                        return;
-                    }
+                    if (!this.modelsLoaded) { return; }
 
                     const detections = await faceapi.detectAllFaces(ui.video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptors();
                     const resizedDetections = faceapi.resizeResults(detections, displaySize);
@@ -403,29 +438,41 @@
 
                     if (resizedDetections.length > 0) {
                         const results = resizedDetections.map(d => this.faceMatcher.findBestMatch(d.descriptor));
-                        
                         let recognized = false;
+                        
+                        const bestResult = results[0];
+
+                        if (bestResult.label !== 'unknown') {
+                            const recognizedUser = this.registeredUsers.find(user => user.label === bestResult.label);
+                            if (recognizedUser) {
+                                ui.resultDisplay.innerHTML = `✅ <span style="color:var(--primary)">${recognizedUser.label}</span>님, 인증되었습니다. (전송값: ${recognizedUser.value})`;
+                                
+                                if (this.sendOnce) {
+                                    if (this.lastRecognizedLabel !== recognizedUser.label) {
+                                        ConnectionManager.sendToMCU(recognizedUser.value);
+                                    }
+                                } else {
+                                    ConnectionManager.sendToMCU(recognizedUser.value);
+                                }
+                                this.lastRecognizedLabel = recognizedUser.label;
+                                recognized = true;
+                            }
+                        }
+
                         results.forEach((result, i) => {
                             const box = resizedDetections[i].detection.box;
                             const drawBox = new faceapi.draw.DrawBox(box, { label: result.toString() });
                             drawBox.draw(ui.canvas);
-
-                            if (result.label !== 'unknown') {
-                                const recognizedUser = this.registeredUsers.find(user => user.label === result.label);
-                                if (recognizedUser) {
-                                    ui.resultDisplay.innerHTML = `✅ <span style="color:var(--primary)">${result.label}</span>님, 인증되었습니다. (전송값: ${recognizedUser.value})`;
-                                    ConnectionManager.sendToMCU(recognizedUser.value);
-                                    recognized = true;
-                                }
-                            }
                         });
 
                         if (!recognized) {
                            ui.resultDisplay.innerHTML = '❌ 등록되지 않은 사용자입니다.';
                            ConnectionManager.sendToMCU('0');
+                           this.lastRecognizedLabel = null;
                         }
                     } else {
                         ui.resultDisplay.textContent = '카메라 앞에서 얼굴을 보여주세요.';
+                        this.lastRecognizedLabel = null;
                     }
                 }, 200);
             }
