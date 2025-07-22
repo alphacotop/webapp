@@ -118,7 +118,7 @@
                             <button id="connectSerialBtn" class="btn btn-primary">시리얼 연결</button>
                             <button id="disconnectSerialBtn" class="btn btn-danger" disabled>해제</button>
                             <button id="connectBleBtn" class="btn btn-primary">블루투스 연결</button>
-                            <button id="disconnectBleBtn" class="btn btn-danger">해제</button>
+                            <button id="disconnectBleBtn" class="btn btn-danger" disabled>해제</button>
                             <span id="connectionStatus" class="status disconnected">연결 안됨</span>
                         </div>
                         <div class="mt-4 pt-4 border-t flex items-center justify-between">
@@ -183,19 +183,11 @@
         </div>
 
         <div class="card mt-6 p-4 bg-gray-100 rounded-lg">
-            <h3 class="text-lg font-bold mb-3" data-translate-key="developer_info">👨‍💻 개발자 정보</h3>
+            <h3 class="text-lg font-bold mb-3">👨‍💻 개발자 정보</h3>
             <div class="text-sm text-gray-600 space-y-2">
                 <p>
-                    <strong data-translate-key="developer_name">김석전</strong><span data-translate-key="developer_affiliation_face">, 송도중학교 정보교사 / 인하대학교 겸임교수</span> 📅 Since 2023.04.24 | 📧 alphaco@kakao.com
+                    <strong >김석전</strong><span>, 송도중학교 정보교사 / 인하대학교 겸임교수</span> 📅 Since 2023.04.24 | 📧 alphaco@kakao.com
                 </p>
-                <div class="mt-3 p-3 bg-white rounded border border-gray-200">
-                    <p class="mb-2" data-translate-key="developer_info_total">WebSerial과 WebBLE를 이용해 다양한 인식 결과를 유/무선으로 MCU에 전송하는 웹앱입니다.</p>
-                    <p class="mb-2" data-translate-key="app_description_2">✅ 아두이노, 마이크로비트, ESP32, 라즈베리파이 피코 등 모든 MCU를 사용할 수 있습니다.</p>
-                    <p class="mb-2" data-translate-key="app_description_3">🌐 Chrome, Edge 브라우저에서 테스트 되었습니다.</p>
-                    <p class="mb-2" data-translate-key="developer_info_hardware_note_face">⚙️ 하드웨어는 블록코딩이나 텍스트 코딩을 이용해 사전에 코드 업로드가 필요합니다.</p>
-                    <p class="mb-2" data-translate-key="app_description_5">🚀 인공지능에 다양한 출력장치를 연결하여 AIoT 애플리케이션을 제작해 보세요.</p>
-                    <p class="mt-3 font-medium" data-translate-key="ccl">📜 CCL: BY-NC-ND</p>
-                </div>
             </div>
         </div>
     </div>
@@ -209,7 +201,7 @@
             document.querySelector(`button[onclick="switchTab('${tabId}')"]`).classList.add('active');
         }
 
-        // FaceLockApp Script (unchanged from original)
+        // FaceLockApp Script
         const ui = {
             video: document.getElementById('video'),
             canvas: document.getElementById('canvas'),
@@ -264,7 +256,7 @@
                     const port = await navigator.serial.requestPort(); 
                     await port.open({ baudRate: CONFIG.SERIAL_BAUD_RATE }); 
                     this.port = port;
-                    this.updateConnectionStatus(true, '시리얼');
+                    this.updateConnectionStatus();
                 } catch(e) {
                     if (e.name !== 'NotFoundError') alert(`시리얼 연결 오류: ${e.message}`);
                 } 
@@ -272,9 +264,13 @@
 
             async disconnectSerial() { 
                 if (!this.port) return;
-                try { if (this.port.readable || this.port.writable) await this.port.close(); } 
-                catch (e) { console.error('포트 닫기 중 오류:', e); } 
-                finally { this.port = null; this.updateConnectionStatus(false); }
+                try { 
+                    if (this.port.readable || this.port.writable) await this.port.close();
+                } catch (e) { console.error('포트 닫기 중 오류:', e); } 
+                finally { 
+                    this.port = null; 
+                    this.updateConnectionStatus();
+                }
             },
 
             async connectBLE() {
@@ -282,15 +278,15 @@
                 const opts = devType === 'microbit' ? {filters:[{namePrefix:"BBC micro:bit"}], optionalServices:[CONFIG.BLE_SERVICE_UUID]} : {filters:[{services:[CONFIG.BLE_SERVICE_UUID]}]};
                 try {
                     this.bleDevice = await navigator.bluetooth.requestDevice(opts);
-                    this.bleDevice.addEventListener('gattserverdisconnected', () => this.updateConnectionStatus(false));
+                    this.bleDevice.addEventListener('gattserverdisconnected', () => this.updateConnectionStatus());
                     const server = await this.bleDevice.gatt.connect();
                     const service = await server.getPrimaryService(CONFIG.BLE_SERVICE_UUID);
                     this.bleCharacteristic = await service.getCharacteristic(CONFIG.BLE_CHARACTERISTIC_UUID);
-                    this.updateConnectionStatus(true, '블루투스'); 
+                    this.updateConnectionStatus(); 
                     alert('블루투스 연결 성공!');
                 } catch(e) {
                     alert(`블루투스 연결 오류: ${e.message}`); 
-                    this.updateConnectionStatus(false);
+                    this.updateConnectionStatus();
                 }
             },
 
@@ -300,13 +296,30 @@
                 } 
             },
 
-            updateConnectionStatus(connected, type = '') {
-                ui.connectionStatus.textContent = connected ? `${type} 연결됨` : '연결 안됨';
-                ui.connectionStatus.className = `status ${connected ? 'connected' : 'disconnected'}`;
-                if (type.toLowerCase().includes('serial') || type.toLowerCase().includes('시리얼')) {
-                    ui.connectSerialBtn.disabled = connected;
-                    ui.disconnectSerialBtn.disabled = !connected;
+            // BUG-FIXED updateConnectionStatus
+            updateConnectionStatus() {
+                const serialConnected = !!this.port;
+                const bleConnected = !!(this.bleDevice?.gatt?.connected);
+
+                // Update status text
+                if (serialConnected) {
+                    ui.connectionStatus.textContent = '시리얼 연결됨';
+                    ui.connectionStatus.className = 'status connected';
+                } else if (bleConnected) {
+                    ui.connectionStatus.textContent = '블루투스 연결됨';
+                    ui.connectionStatus.className = 'status connected';
+                } else {
+                    ui.connectionStatus.textContent = '연결 안됨';
+                    ui.connectionStatus.className = 'status disconnected';
                 }
+
+                // Update Serial Buttons
+                ui.connectSerialBtn.disabled = serialConnected;
+                ui.disconnectSerialBtn.disabled = !serialConnected;
+
+                // Update BLE Buttons
+                ui.connectBleBtn.disabled = bleConnected;
+                ui.disconnectBleBtn.disabled = !bleConnected;
             }
         };
 
