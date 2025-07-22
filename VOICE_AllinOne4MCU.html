@@ -19,6 +19,14 @@
         .status.disconnected { background: #f9ebea; color: #b03a2e; }
         .status.listening { background: #d6eaf8; color: #1a5276; }
         .highlight { border: 2px solid #e74c3c !important; box-shadow: 0 0 10px rgba(231, 76, 60, 0.5); transform: scale(1.01); }
+        
+        /* Toggle Switch 스타일 추가 */
+        .switch { position: relative; display: inline-block; width: 50px; height: 28px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 28px; }
+        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: #e74c3c; } /* VOICE 앱의 Primary color */
+        input:checked + .slider:before { transform: translateX(22px); }
     </style>
 </head>
 <body class="p-4">
@@ -79,18 +87,30 @@
 
             <div class="card bg-gray-50 p-6 rounded-lg">
                 <h3 class="text-xl font-bold mb-4" data-translate-key="connection_settings">🔌 연결 설정</h3>
-                <div class="mb-4">
+                <div class="input-group mb-4">
                     <label for="ble-device-type" class="text-sm font-medium text-gray-700" data-translate-key="ble_device_type">블루투스 장치 유형</label>
                     <select id="ble-device-type" class="w-full mt-1 p-2 border border-gray-300 rounded-md">
                         <option value="microbit" data-translate-key="microbit_device">마이크로비트 (이름으로 검색)</option>
                         <option value="generic" data-translate-key="generic_uart_device">일반 UART 장치 (Arduino, ESP32 등)</option>
                     </select>
                 </div>
-                <button class="btn btn-primary" onclick="connectSerial()" data-translate-key="serial_connect">시리얼 연결</button>
-                <button class="btn btn-danger" onclick="disconnectSerial()" data-translate-key="disconnect">해제</button>
-                <button class="btn btn-primary" onclick="connectBLE()" data-translate-key="ble_connect">블루투스 연결</button>
-                <button class="btn btn-danger" onclick="disconnectBLE()" data-translate-key="disconnect">해제</button>
-                <span id="connectionStatus" class="status disconnected" data-translate-key="status_disconnected">연결 안됨</span>
+                <div class="flex flex-wrap items-center">
+                    <button class="btn btn-primary" onclick="connectSerial()" data-translate-key="serial_connect">시리얼 연결</button>
+                    <button class="btn btn-danger" onclick="disconnectSerial()" data-translate-key="disconnect">해제</button>
+                    <button class="btn btn-primary" onclick="connectBLE()" data-translate-key="ble_connect">블루투스 연결</button>
+                    <button class="btn btn-danger" onclick="disconnectBLE()" data-translate-key="disconnect">해제</button>
+                    <span id="connectionStatus" class="status disconnected" data-translate-key="status_disconnected">연결 안됨</span>
+                </div>
+                <div class="mt-4 pt-4 border-t flex items-center justify-between">
+                    <div class="flex items-center">
+                        <span class="text-sm font-medium text-gray-700">전송 방식:</span>
+                        <span id="send-mode-status" class="ml-2 text-sm font-bold"></span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="send-once-toggle" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
             </div>
 
             <div class="card bg-gray-50 p-6 rounded-lg mt-6">
@@ -100,29 +120,29 @@
                     <li data-translate-key="guide_voice_2">
                         '+' 버튼을 눌러 인식할 단어와 MCU로 보낼 값을 설정합니다. (최대 20개)
                     </li>
-                    <li data-translate-key="guide_voice_3">시리얼 또는 블루투스로 제어할 장치를 연결합니다.</li>
+                    <li data-translate-key="guide_voice_3">시리얼 또는 블루투스로 제어할 장치를 연결하고, 전송 방식을 선택합니다.</li>
                     <li data-translate-key="guide_voice_4">'인식 시작' 버튼을 누르고 설정한 단어를 포함하여 말합니다.</li>
                     <li data-translate-key="guide_voice_5">단어가 인식되면 해당 칸이 붉게 강조되며 설정된 값이 자동으로 전송됩니다.</li>
                 </ol>
             </div>
 
-        <div class="card mt-6 p-4 bg-gray-100 rounded-lg">
-            <h3 class="text-lg font-bold mb-3" data-translate-key="developer_info">👨‍💻 개발자 정보</h3>
-            <div class="text-sm text-gray-600 space-y-2">
-                <p>
-                    <strong data-translate-key="developer_name">김석전</strong><span data-translate-key="developer_affiliation_face">, 송도중학교 정보교사 / 인하대학교 겸임교수</span> 📅 Since 2023.04.24 | 📧 alphaco@kakao.com
-                </p>
-                <div class="mt-3 p-3 bg-white rounded border border-gray-200">
-                    <p class="mb-2" data-translate-key="developer_info_voice">WebSerial과 WebBLE를 이용해 음성 인식 결과를 유/무선으로 MCU에 전송하는 웹앱입니다.</p>
-                    <p class="mb-2" data-translate-key="app_description_2">✅ 아두이노, 마이크로비트, ESP32, 라즈베리파이 피코 등 모든 MCU를 사용할 수 있습니다.</p>
-                    <p class="mb-2" data-translate-key="app_description_3">🌐 Chrome, Edge 브라우저에서 테스트 되었습니다.</p>
-                    <p class="mb-2" data-translate-key="developer_info_hardware_note_face">⚙️ 하드웨어는 블록코딩이나 텍스트 코딩을 이용해 사전에 코드 업로드가 필요합니다.</p>
-                    <p class="mb-2" data-translate-key="app_description_5">🚀 인공지능에 다양한 출력장치를 연결하여 AIoT 애플리케이션을 제작해 보세요.</p>
-                    <p class="mt-3 font-medium" data-translate-key="ccl">📜 CCL: BY-NC-ND</p>
+            <div class="card mt-6 p-4 bg-gray-100 rounded-lg">
+                <h3 class="text-lg font-bold mb-3" data-translate-key="developer_info">👨‍💻 개발자 정보</h3>
+                <div class="text-sm text-gray-600 space-y-2">
+                    <p>
+                        <strong data-translate-key="developer_name">김석전</strong><span data-translate-key="developer_affiliation_face">, 송도중학교 정보교사 / 인하대학교 겸임교수</span> 📅 Since 2023.04.24 | 📧 alphaco@kakao.com
+                    </p>
+                    <div class="mt-3 p-3 bg-white rounded border border-gray-200">
+                        <p class="mb-2" data-translate-key="developer_info_voice">WebSerial과 WebBLE를 이용해 음성 인식 결과를 유/무선으로 MCU에 전송하는 웹앱입니다.</p>
+                        <p class="mb-2" data-translate-key="app_description_2">✅ 아두이노, 마이크로비트, ESP32, 라즈베리파이 피코 등 모든 MCU를 사용할 수 있습니다.</p>
+                        <p class="mb-2" data-translate-key="app_description_3">🌐 Chrome, Edge 브라우저에서 테스트 되었습니다.</p>
+                        <p class="mb-2" data-translate-key="developer_info_hardware_note_face">⚙️ 하드웨어는 블록코딩이나 텍스트 코딩을 이용해 사전에 코드 업로드가 필요합니다.</p>
+                        <p class="mb-2" data-translate-key="app_description_5">🚀 인공지능에 다양한 출력장치를 연결하여 AIoT 애플리케이션을 제작해 보세요.</p>
+                        <p class="mt-3 font-medium" data-translate-key="ccl">📜 CCL: BY-NC-ND</p>
+                    </div>
                 </div>
             </div>
-        </div>
-            </main>
+        </main>
     </div>
 
     <script>
@@ -130,8 +150,10 @@
         let bleDevice = null;
         let bleCharacteristic = null;
         let recognition = null;
+        let sendOnce = true; // 전송 방식 상태 변수
+        let lastSentCommand = null; // 마지막으로 전송된 명령어
 
-        // --- 연결 관리 (TM_AllinOne4MCU_V10 기반) ---
+        // --- 연결 관리 ---
         async function sendToMCU(data) {
             const dataToSend = data + '\n';
             if (port?.writable) {
@@ -215,7 +237,10 @@
                 if(recognition) recognition.lang = e.target.value;
             };
 
-            recognition.onstart = () => updateRecognitionStatus(true, '음성 인식 중...');
+            recognition.onstart = () => {
+                updateRecognitionStatus(true, '음성 인식 중...');
+                lastSentCommand = null; // 인식이 시작될 때 마지막 명령어 초기화
+            };
             recognition.onend = () => updateRecognitionStatus(false, '인식 대기중');
             recognition.onerror = (e) => {
                 console.error('Voice recognition error:', e.error);
@@ -233,6 +258,7 @@
             statusEl.className = `status text-center w-full mt-4 p-2 ${isListening ? 'listening' : 'disconnected'}`;
         }
 
+        // processCommand 함수 수정
         function processCommand(event) {
             const transcript = event.results[event.results.length - 1][0].transcript.trim();
             document.getElementById('final-transcript').textContent = transcript;
@@ -240,15 +266,29 @@
             document.querySelectorAll('.command-row').forEach(row => row.classList.remove('highlight'));
             
             const commandRows = document.querySelectorAll('.command-row');
+            let commandFound = false;
             for (const row of commandRows) {
                 const commandInput = row.querySelector('.command-word').value.trim();
                 const valueInput = row.querySelector('.command-value').value.trim();
 
                 if (commandInput && transcript.includes(commandInput)) {
                     row.classList.add('highlight');
-                    sendToMCU(valueInput || '0');
+                    const valueToSend = valueInput || '0';
+                    
+                    if (sendOnce) {
+                        if (commandInput !== lastSentCommand) {
+                            sendToMCU(valueToSend);
+                            lastSentCommand = commandInput;
+                        }
+                    } else {
+                        sendToMCU(valueToSend);
+                    }
+                    commandFound = true;
                     break; 
                 }
+            }
+            if (!commandFound) {
+                lastSentCommand = null; // 일치하는 명령어가 없으면 마지막 명령어 초기화
             }
         }
 
@@ -283,6 +323,18 @@
             commandList.appendChild(newRow);
         }
 
+        // 전송 방식 상태 업데이트 함수 추가
+        function updateSendModeStatus() {
+            const statusEl = document.getElementById('send-mode-status');
+            if (sendOnce) {
+                statusEl.textContent = '1회 전송 (once)';
+                statusEl.className = 'ml-2 text-sm font-bold text-green-600';
+            } else {
+                statusEl.textContent = '연속 전송 (continuously)';
+                statusEl.className = 'ml-2 text-sm font-bold text-blue-600';
+            }
+        }
+
         // --- 앱 초기화 ---
         document.addEventListener('DOMContentLoaded', () => {
             if (typeof setLanguage === 'function') { setLanguage(); }
@@ -291,6 +343,15 @@
                 document.getElementById('stop-btn').onclick = () => recognition.stop();
             }
             setupCommandUI();
+
+            // 토글 스위치 이벤트 리스너 추가
+            const sendOnceToggle = document.getElementById('send-once-toggle');
+            sendOnceToggle.addEventListener('change', (e) => {
+                sendOnce = e.target.checked;
+                updateSendModeStatus();
+                lastSentCommand = null; // 모드 변경 시 초기화
+            });
+            updateSendModeStatus(); // 초기 상태 설정
         });
     </script>
 </body>
